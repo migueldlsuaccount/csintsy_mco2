@@ -1,0 +1,149 @@
+================================================================================
+100 NON-BIASED TEST CASES FOR PINOYBOT
+================================================================================
+
+Test Distribution:
+  Filipino (FIL): 40 cases (40%)
+  English (ENG):  35 cases (35%)
+  Other (OTH):    25 cases (25%)
+  TOTAL:          100 cases
+
+================================================================================
+✅ ako                  -> FIL (expected: FIL)
+✅ ikaw                 -> FIL (expected: FIL)
+✅ siya                 -> FIL (expected: FIL)
+✅ tayo                 -> FIL (expected: FIL)
+✅ kami                 -> FIL (expected: FIL)
+✅ kayo                 -> FIL (expected: FIL)
+✅ sila                 -> FIL (expected: FIL)
+✅ gusto                -> FIL (expected: FIL)
+✅ ayaw                 -> FIL (expected: FIL)
+✅ mahal                -> FIL (expected: FIL)
+✅ puso                 -> FIL (expected: FIL)
+✅ bahay                -> FIL (expected: FIL)
+✅ pera                 -> FIL (expected: FIL)
+✅ trabaho              -> FIL (expected: FIL)
+✅ kaibigan             -> FIL (expected: FIL)
+❌ pamilya              -> ENG (expected: FIL)
+✅ maganda              -> FIL (expected: FIL)
+✅ pangit               -> FIL (expected: FIL)
+✅ mabuti               -> FIL (expected: FIL)
+✅ masama               -> FIL (expected: FIL)
+✅ kumain               -> FIL (expected: FIL)
+✅ uminom               -> FIL (expected: FIL)
+✅ matulog              -> FIL (expected: FIL)
+✅ gumising             -> FIL (expected: FIL)
+❌ pumunta              -> ENG (expected: FIL)
+✅ bumalik              -> FIL (expected: FIL)
+✅ nagtatrabaho         -> FIL (expected: FIL)
+✅ nag-aaral            -> FIL (expected: FIL)
+✅ nagluluto            -> FIL (expected: FIL)
+✅ naglalakad           -> FIL (expected: FIL)
+✅ kasi                 -> FIL (expected: FIL)
+✅ pero                 -> FIL (expected: FIL)
+✅ kaya                 -> FIL (expected: FIL)
+✅ para                 -> FIL (expected: FIL)
+✅ dahil                -> FIL (expected: FIL)
+✅ ngayon               -> FIL (expected: FIL)
+✅ bukas                -> FIL (expected: FIL)
+✅ kahapon              -> FIL (expected: FIL)
+✅ palagi               -> FIL (expected: FIL)
+✅ minsan               -> FIL (expected: FIL)
+✅ love                 -> ENG (expected: ENG)
+❌ like                 -> FIL (expected: ENG)
+✅ want                 -> ENG (expected: ENG)
+✅ need                 -> ENG (expected: ENG)
+✅ have                 -> ENG (expected: ENG)
+❌ make                 -> FIL (expected: ENG)
+✅ think                -> ENG (expected: ENG)
+✅ know                 -> ENG (expected: ENG)
+✅ feel                 -> ENG (expected: ENG)
+✅ look                 -> ENG (expected: ENG)
+❌ time                 -> FIL (expected: ENG)
+❌ day                  -> FIL (expected: ENG)
+✅ year                 -> ENG (expected: ENG)
+✅ work                 -> ENG (expected: ENG)
+✅ life                 -> ENG (expected: ENG)
+✅ friend               -> ENG (expected: ENG)
+✅ family               -> ENG (expected: ENG)
+✅ house                -> ENG (expected: ENG)
+✅ school               -> ENG (expected: ENG)
+✅ teacher              -> ENG (expected: ENG)
+✅ student              -> ENG (expected: ENG)
+✅ beautiful            -> ENG (expected: ENG)
+✅ happy                -> ENG (expected: ENG)
+✅ sad                  -> ENG (expected: ENG)
+❌ angry                -> FIL (expected: ENG)
+❌ today                -> FIL (expected: ENG)
+✅ tomorrow             -> ENG (expected: ENG)
+✅ yesterday            -> ENG (expected: ENG)
+✅ always               -> ENG (expected: ENG)
+✅ never                -> ENG (expected: ENG)
+❌ sometimes            -> FIL (expected: ENG)
+✅ because              -> ENG (expected: ENG)
+✅ really               -> ENG (expected: ENG)
+✅ very                 -> ENG (expected: ENG)
+✅ much                 -> ENG (expected: ENG)
+✅ .                    -> OTH (expected: OTH)
+✅ ,                    -> OTH (expected: OTH)
+✅ !                    -> OTH (expected: OTH)
+✅ ?                    -> OTH (expected: OTH)
+✅ ...                  -> OTH (expected: OTH)
+✅ haha                 -> OTH (expected: OTH)
+✅ hehe                 -> OTH (expected: OTH)
+✅ huhu                 -> OTH (expected: OTH)
+✅ omg                  -> OTH (expected: OTH)
+❌ lol                  -> ENG (expected: OTH)
+✅ btw                  -> OTH (expected: OTH)
+❌ asap                 -> FIL (expected: OTH)
+✅ FYI                  -> OTH (expected: OTH)
+✅ USA                  -> OTH (expected: OTH)
+✅ LOL                  -> OTH (expected: OTH)
+✅ 123                  -> OTH (expected: OTH)
+✅ 2023                 -> OTH (expected: OTH)
+✅ 1st                  -> OTH (expected: OTH)
+✅ 2nd                  -> OTH (expected: OTH)
+✅ covid19              -> OTH (expected: OTH)
+✅ :)                   -> OTH (expected: OTH)
+❌ :D                   -> FIL (expected: OTH)
+✅ !!!                  -> OTH (expected: OTH)
+✅ ???                  -> OTH (expected: OTH)
+✅ hahahaha             -> OTH (expected: OTH)
+
+================================================================================
+RESULTS SUMMARY
+================================================================================
+
+Overall Accuracy: 88/100 = 88.00%
+
+Per-Class Performance:
+  FIL: 38/40 = 95.00%
+  ENG: 28/35 = 80.00%
+  OTH: 22/25 = 88.00%
+
+================================================================================
+ERRORS (12 total):
+================================================================================
+  'pamilya' -> predicted ENG (should be FIL)
+  'pumunta' -> predicted ENG (should be FIL)
+  'like' -> predicted FIL (should be ENG)
+  'make' -> predicted FIL (should be ENG)
+  'time' -> predicted FIL (should be ENG)
+  'day' -> predicted FIL (should be ENG)
+  'angry' -> predicted FIL (should be ENG)
+  'today' -> predicted FIL (should be ENG)
+  'sometimes' -> predicted FIL (should be ENG)
+  'lol' -> predicted ENG (should be OTH)
+  'asap' -> predicted FIL (should be OTH)
+  ':D' -> predicted FIL (should be OTH)
+
+================================================================================
+CONFUSION MATRIX
+================================================================================
+
+         Predicted
+Actual   FIL  ENG  OTH
+------------------------------
+FIL       38    2    0
+ENG        7   28    0
+OTH        2    1   22
