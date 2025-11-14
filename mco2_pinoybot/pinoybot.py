@@ -38,21 +38,29 @@ model = joblib.load("pinoybot_model.pkl")
     # Currently, the bot just tags every token as FIL. Replace this with your more intelligent predictions
 
 # Helper function to extract features from a word
+
 def extract_features(word):
-    #extract handcrafted features from a given word
+    """Extract handcrafted features from a given word."""
     if not isinstance(word, str):
         word = str(word) if word is not None else ""
     
     w = word.lower()
     
-    # pre-compile regex patterns
+    # Pre-compile regex patterns for better performance
     consonant_pattern = r'[bcdfghjklmnpqrstvwxyz]'
     consonant_clusters = len(re.findall(consonant_pattern + r'{2,}', w))
     starts_consonant_cluster = int(bool(re.match(consonant_pattern + r'{2,}', w)))
     
-    # calculate vowel ratio
+    # Calculate vowel and consonant counts
     vowel_count = sum(c in 'aeiou' for c in w)
     consonant_count = sum(c in 'bcdfghjklmnpqrstvwxyz' for c in w)
+    
+    has_repeating = 0
+    for i in range(len(w) - 3):
+        if w[i] in 'bdghjklmnprstwy' and w[i+1] in 'aeiou':
+            if w[i:i+2] == w[i+2:i+4]:
+                has_repeating = 1
+                break
     
     return {
         "length": len(w),
@@ -61,6 +69,7 @@ def extract_features(word):
         "starts_consonant_cluster": starts_consonant_cluster,
         
         # FIL features
+        "has_reduplication": int(has_repeating), #repeating, "gaga(wa)", "(ma)nana(lo)"
         "has_-": int(bool(re.search(r'[mnp]ag-', w))),
         "has_ng": int("ng" in w), # common in Filipino: "ng", "mang", "sang"
         "has_mga": int("mga" in w), # common in Filipino: "mga"
@@ -79,6 +88,8 @@ def extract_features(word):
         "pattern_cuco": int(bool(re.search(r'[bdghjklmnpqrstvwxyz]u[bdghjklmnpqrstvwxyz]o$', w))), # gusto, puso, turo, luto
         
         # ENG features
+        "suffix_mes": int(w.endswith("mes")), #games, frames, names...
+        "suffix_ine": int(w.endswith("ine")), #Dopamine, Creatine, Valentine...
         "pattern_ix": int(bool(re.search(r'[i][snft]', w)) and len(w) < 3), # is in if it
         "ends_with_o_<2": int(bool(re.search(r'[stgd]o', w)) and len(w) < 3), # so go to do
         "suffix_ing": int(w.endswith("ing")), # learning, programming, procastinating LOOOOLLL
@@ -139,30 +150,110 @@ def extract_features(word):
         "uncommon_letter_combo": int(bool(re.search(r'[qxz]{2}|[bcdfghjklmnpqrstvwxyz]{4,}', w))),  # Weird combos
     }
 
+
 # MAIN FUNCTION
-def tag_language(tokens: List[str]) -> List[str]:
+def tag_language(df: pd.DataFrame, model) -> List[str]:
     """
-    Takes a list of tokens (words) and returns a list of language tags.
-    
-    Args:
-        tokens: List of word tokens (strings).
-    
-    Returns:
-        tags: List of predicted tags ("ENG", "FIL", or "OTH"), one per token.
-    
-    Example:
-        >>> tag_language(["Love", "kita", ".", "nagpost", "ako", "today"])
-        ['ENG', 'FIL', 'OTH', 'FIL', 'FIL', 'ENG']
+    Takes a DataFrame with 'word' column and returns a list of language tags.
     """
-    features = [extract_features(word) for word in tokens]
-    X = pd.DataFrame(features)
+    if df.empty:
+        return []
+    
+    X = prepare_features(df)
     preds = model.predict(X)
     return preds.tolist()
 
-if __name__ == "__main__":
-    # Example usage
-    example_tokens = ["Love", "kita", ".","nagpost", "ako", "Naghihintay", "so", "go", "po"]
-    print("Tokens:", example_tokens)
-    tags = tag_language(example_tokens)
+def prepare_features(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Convert dataset of words into features.
+    """
+    X = pd.DataFrame([extract_features(w) for w in df["word"]])
+    return X
 
-    print("Tags:", tags)
+import pandas as pd
+
+def read_tokens_from_file(filepath: str) -> pd.DataFrame:
+    """
+    Reads CSV, TXT, or XLSX and extracts the 'word' column into a DataFrame.
+    Works with headers. Includes all characters in the word.
+    
+    Args:
+        filepath: Path to the input file
+    
+    Returns:
+        DataFrame with a single 'word' column
+    """
+    words = []
+
+    if filepath.lower().endswith(".xlsx"):
+        df = pd.read_excel(filepath)
+    elif filepath.lower().endswith(".csv"):
+        df = pd.read_csv(filepath)
+    else:
+        # TXT file, one token per line
+        with open(filepath, 'r', encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                words.append(line)
+        return pd.DataFrame({'word': words})
+
+    # Automatically detect 'word' column
+    if "word" in df.columns:
+        words = df["word"].astype(str).tolist()
+    else:
+        # Fallback: take the 3rd column (index 2)
+        words = df.iloc[:, 2].astype(str).tolist()
+
+    return pd.DataFrame({'word': words})
+
+
+def write_tags_to_file(tags: List[str], output_filepath: str):
+    """
+    Write predicted tags to a file, one tag per line.
+    """
+    with open(output_filepath, 'w', encoding='utf-8') as f:
+        f.write('\n'.join(tags))
+
+
+if __name__ == "__main__":
+
+    print("=" * 50)
+    print("Language Tagger - Code-Switched Text")
+    print("=" * 50)
+
+    input_file = input("\nEnter input filename (txt/csv/xlsx): ").strip()
+    output_file = input("Enter output filename (default: output_tags.txt): ").strip()
+    if not output_file:
+        output_file = "output_tags.txt"
+
+    try:
+        # Read file
+        print(f"\nReading tokens from: {input_file}")
+        df = read_tokens_from_file(input_file)
+        print(f"Found {len(df)} tokens")
+        print("\nFirst 5 words:")
+        print(df.head(100))
+
+        # Load trained model
+        model = joblib.load('pinoybot_model.pkl')
+        print("\nModel loaded successfully!")
+
+        # Predict tags
+        print("\nPredicting tags...")
+        tags = tag_language(df, model)
+
+        print("\nFirst 5 predictions:")
+        for i in range(min(100, len(tags))):
+            print(f"  {df.iloc[i]['word']} -> {tags[i]}")
+
+        # Save output
+        write_tags_to_file(tags, output_file)
+        print(f"\n✓ Tags successfully written to: {output_file}")
+        print(f"  Total tokens processed: {len(tags)}")
+
+    except FileNotFoundError:
+        print(f"\n✗ Error: File '{input_file}' not found!")
+    except Exception as e:
+        print(f"\n✗ Error: {str(e)}")

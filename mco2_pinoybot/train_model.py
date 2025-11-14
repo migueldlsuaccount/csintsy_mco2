@@ -34,6 +34,13 @@ def extract_features(word):
     vowel_count = sum(c in 'aeiou' for c in w)
     consonant_count = sum(c in 'bcdfghjklmnpqrstvwxyz' for c in w)
     
+    has_repeating = 0
+    for i in range(len(w) - 3):
+        if w[i] in 'bdghjklmnprstwy' and w[i+1] in 'aeiou':
+            if w[i:i+2] == w[i+2:i+4]:
+                has_repeating = 1
+                break
+    
     return {
         "length": len(w),
         "vowel_ratio": vowel_count / max(1, len(w)),
@@ -41,6 +48,7 @@ def extract_features(word):
         "starts_consonant_cluster": starts_consonant_cluster,
         
         # FIL features
+        "has_reduplication": int(has_repeating), #repeating, "gaga(wa)", "(ma)nana(lo)"
         "has_-": int(bool(re.search(r'[mnp]ag-', w))),
         "has_ng": int("ng" in w), # common in Filipino: "ng", "mang", "sang"
         "has_mga": int("mga" in w), # common in Filipino: "mga"
@@ -59,6 +67,8 @@ def extract_features(word):
         "pattern_cuco": int(bool(re.search(r'[bdghjklmnpqrstvwxyz]u[bdghjklmnpqrstvwxyz]o$', w))), # gusto, puso, turo, luto
         
         # ENG features
+        "suffix_mes": int(w.endswith("mes")), #games, frames, names...
+        "suffix_ine": int(w.endswith("ine")), #Dopamine, Creatine, Valentine...
         "pattern_ix": int(bool(re.search(r'[i][snft]', w)) and len(w) < 3), # is in if it
         "ends_with_o_<2": int(bool(re.search(r'[stgd]o', w)) and len(w) < 3), # so go to do
         "suffix_ing": int(w.endswith("ing")), # learning, programming, procastinating LOOOOLLL
@@ -118,6 +128,7 @@ def extract_features(word):
         "is_pure_punctuation": int(not any(c.isalnum() for c in word) and len(word) > 0),  # ".", "...", "!!!"
         "uncommon_letter_combo": int(bool(re.search(r'[qxz]{2}|[bcdfghjklmnpqrstvwxyz]{4,}', w))),  # Weird combos
     }
+
 
 
 def prepare_dataset(df):
