@@ -107,4 +107,3 @@ for actual in ["FIL", "ENG", "OTH"]:
     print(f"{actual:6s}   {counts[0]:3d}  {counts[1]:3d}  {counts[2]:3d}")
 
 print("\n" + "=" * 80)
-

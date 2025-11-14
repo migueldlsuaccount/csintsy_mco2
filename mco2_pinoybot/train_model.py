@@ -56,7 +56,7 @@ def extract_features(word):
         "has_sto": int("sto" in w), # common in Filipino borrowed words: gusto, wasto, Agosto, gastos
         "starts_gu": int(w.startswith("gu")), # common Filipino verbs: gusto, gumawa, gumagawa, gumamit, gumising
         "has_abe": int("abe" in w),
-        "pattern_cuco": int(bool(re.search(r'[bcdfghjklmnpqrstvwxyz]u[bcdfghjklmnpqrstvwxyz]o$', w))), # gusto, puso, turo, luto
+        "pattern_cuco": int(bool(re.search(r'[bdghjklmnpqrstvwxyz]u[bdghjklmnpqrstvwxyz]o$', w))), # gusto, puso, turo, luto
         
         # ENG features
         "pattern_ix": int(bool(re.search(r'[i][snft]', w)) and len(w) < 3), # is in if it
