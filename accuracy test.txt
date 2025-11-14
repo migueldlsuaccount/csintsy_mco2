@@ -1,0 +1,22 @@
+============================================================
+BEST PARAMETERS: {'criterion': 'entropy', 'max_depth': 30, 'min_samples_leaf': 1, 'min_samples_split': 15}
+Best Validation Accuracy: 0.8975
+============================================================
+
+Decision Tree Evaluation
+---------------------------
+Accuracy: 0.9058450906996832
+
+Classification Report:
+               precision    recall  f1-score   support
+
+         ENG       0.52      0.74      0.61       272
+         FIL       0.97      0.94      0.95      2702
+         OTH       0.88      0.82      0.85       499
+
+    accuracy                           0.91      3473
+   macro avg       0.79      0.83      0.81      3473
+weighted avg       0.92      0.91      0.91      3473
+
+
+✅ Model saved as pinoybot_model.pkl
