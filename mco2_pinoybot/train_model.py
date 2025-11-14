@@ -41,28 +41,32 @@ def extract_features(word):
         "starts_consonant_cluster": starts_consonant_cluster,
         
         # FIL features
+        "has_-": int(bool(re.search(r'[mnp]ag-', w))),
         "has_ng": int("ng" in w), # common in Filipino: "ng", "mang", "sang"
         "has_mga": int("mga" in w), # common in Filipino: "mga"
         "prefix_mag": int(w.startswith("mag")), # common in Filipino: "mag"
         "prefix_nag": int(w.startswith("nag")), # common in Filipino: "nag"
         "prefix_pag": int(w.startswith("pag")), # common in Filipino: "pag"
-        "prefix_ka": int(w.startswith("ka")), # common in Filipino: "ka"
-        "suffix_an": int(w.endswith("an")), # common in Filipino: "an"
-        "suffix_in": int(w.endswith("in")), # common in Filipino: "in"
+        "prefix_ka": int(w.startswith("ka") and len(w) > 2), # common in Filipino: "ka"
+        "suffix_an": int(w.endswith("an") and len(w) > 2), # common in Filipino: "an"
+        "suffix_in": int(w.endswith("in") and len(w) > 2), # common in Filipino: "in"
         "suffix_han": int(w.endswith("han")), # common in Filipino: "han"
         "suffix_o": int(w.endswith("o") and len(w) > 2), # common in Filipino: gusto, pero, ako, ko, ito, tao
         "has_uso": int("uso" in w), # common in Filipino: puso, kapuso, dugo, grupo
         "has_sto": int("sto" in w), # common in Filipino borrowed words: gusto, wasto, Agosto, gastos
         "starts_gu": int(w.startswith("gu")), # common Filipino verbs: gusto, gumawa, gumagawa, gumamit, gumising
-        "pattern_cuco": int(bool(re.search(r'[bcdfghjklmnpqrstvwxyz]u[bcdfghjklmnpqrstvwxyz]o$', w))), # Filipino pattern: gusto, puso, turo, luto
+        "has_abe": int("abe" in w),
+        "pattern_cuco": int(bool(re.search(r'[bcdfghjklmnpqrstvwxyz]u[bcdfghjklmnpqrstvwxyz]o$', w))), # gusto, puso, turo, luto
         
         # ENG features
+        "pattern_ix": int(bool(re.search(r'[i][snft]', w)) and len(w) < 3), # is in if it
+        "ends_with_o_<2": int(bool(re.search(r'[stgd]o', w)) and len(w) < 3), # so go to do
         "suffix_ing": int(w.endswith("ing")), # learning, programming, procastinating LOOOOLLL
         "suffix_ed": int(w.endswith("ed")), #cooked, depressed, mega-cooked...
         "suffix_ly": int(w.endswith("ly")), # lovely, quickly, happily
         "suffix_tion": int(w.endswith("tion")), # nation, station, relation
         "suffix_ness": int(w.endswith("ness")), # happiness, sadness, kindness
-        "suffix_er": int(w.endswith("er")), # teacher, player, runner, nigger
+        "suffix_er": int(w.endswith("er")), # teacher, player, runner, 
         "suffix_est": int(w.endswith("est")), # biggest, fastest, strongest
         "suffix_s": int(w.endswith("s") and len(w) > 2),  # English plurals
         "suffix_y": int(w.endswith("y") and len(w) > 2),  # today, yesterday, happy
@@ -70,7 +74,6 @@ def extract_features(word):
         "prefix_re": int(w.startswith("re")), # redo, rewrite, reread
         "prefix_pre": int(w.startswith("pre")), # preview, pretest, pre-enlist
         "prefix_dis": int(w.startswith("dis")), # disconnect, disapprove
-        "has_ing": int(w.endswith("ing")), # learning, programming, procrastinating ??? meron nang suffix_ing
         "has_ed": int(w.endswith("ed")),   # cooked, played, jumped
         "has_ion": int("ion" in w), # nation, station, relation
         "has_tion": int("tion" in w), # nation, station, relation
@@ -83,25 +86,21 @@ def extract_features(word):
         "has_gh": int("gh" in w),  # night, through
         "has_wh": int("wh" in w),  # what, where, when
         "has_oo": int("oo" in w),  # good, food, book
+        "has_ll": int("ll" in w),  # hello
         "has_ea": int("ea" in w),  # weather, beautiful, eat
-        "has_ee": int("ee" in w),  # see, tree, meet, feel (NEW - safe English marker)
-        "has_ou": int("ou" in w),  # house, mouse, out, about (NEW - safe English marker)
-        "has_ai": int("ai" in w),  # rain, wait, main (NEW - rare in Filipino)
-        "starts_str": int(w.startswith("str")),  # street, string, strong (NEW - never in native Filipino)
-        "starts_spr": int(w.startswith("spr")),  # spring, spread, spray (NEW - never in native Filipino)
-        "starts_thr": int(w.startswith("thr")),  # three, through, throw (NEW - never in native Filipino)
-        "suffix_ful": int(w.endswith("ful")),  # beautiful, wonderful (NEW - pure English suffix)
-        "suffix_less": int(w.endswith("less")),  # endless, helpless (NEW - pure English suffix)
-        "suffix_ment": int(w.endswith("ment")),  # movement, government (NEW - pure English suffix)
-        "contains_v": int("v" in w), # Filipino rarely uses 'v'
-        "contains_w": int("w" in w), # Filipino rarely uses 'w'
-        "contains_j": int("j" in w), # Filipino rarely uses 'j'
-        "contains_x": int("x" in w), # Filipino rarely uses 'x'
-        "contains_z": int("z" in w), # Filipino rarely uses 'z'
-        "contains_f": int("f" in w),  # Filipino rarely uses 'f'
+        "has_ee": int("ee" in w),  # see, tree, meet, feel 
+        "has_ou": int("ou" in w),  # house, mouse, out, about
+        "has_ai": int("ai" in w),  # rain, wait, main
+        "starts_str": int(w.startswith("str")),  # street, string, strong 
+        "starts_spr": int(w.startswith("spr")),  # spring, spread, spray 
+        "starts_thr": int(w.startswith("thr")),  # three, through, throw 
+        "suffix_ful": int(w.endswith("ful")),  # beautiful, wonderful 
+        "suffix_less": int(w.endswith("less")),  # endless, helpless 
+        "suffix_ment": int(w.endswith("ment")),  # movement, government
+        "contains_following": int(bool(re.search(r'[vwjxzfcq]', w))), #uncommon letters in filipino
         
         # OTH features (symbols, numbers, abbreviations, onomatopoeia, unknown)
-        "is_very_short": int(len(w) <= 2),  # Abbreviations/symbols: "ok", ".", ",", "lol"
+        "is_very_short": int(len(w) <= 2),  # "ok", ".", ",", "lol"
         "is_single_char": int(len(w) == 1),  # Single punctuation or letter
         "has_digit": int(any(c.isdigit() for c in word)),  # Numbers: "123", "1st"
         "has_symbol": int(bool(re.search(r'[^A-Za-z0-9ñÑ]', word))),  # Punctuation: ".", "!", "?"
@@ -119,6 +118,7 @@ def extract_features(word):
         "is_pure_punctuation": int(not any(c.isalnum() for c in word) and len(word) > 0),  # ".", "...", "!!!"
         "uncommon_letter_combo": int(bool(re.search(r'[qxz]{2}|[bcdfghjklmnpqrstvwxyz]{4,}', w))),  # Weird combos
     }
+
 
 def prepare_dataset(df):
     #this onvert dataset of words and labels into features and targets
@@ -148,9 +148,9 @@ print("="*60)
 # Search space: 2×4×3×3 = 72 combinations
 search_space = {
     'criterion': ['gini', 'entropy'],
-    'max_depth': [15, 20, 25, 30],
-    'min_samples_leaf': [1, 3, 5],
-    'min_samples_split': [5, 10, 15]
+    'max_depth': [10, 15, 20, 25],
+    'min_samples_leaf': [3, 5, 10],
+    'min_samples_split': [2, 5, 10, 15]
 }
 
 def objective(trial):
